@@ -1,0 +1,12 @@
+Jan 10 03:14:02 webserver sshd[1201]: Invalid user admin from 203.0.113.5
+Jan 10 03:14:03 webserver sshd[1201]: Failed password for invalid user admin from 203.0.113.5 port 51501 ssh2
+Jan 10 03:14:05 webserver sshd[1202]: Invalid user test from 203.0.113.5
+Jan 10 03:14:05 webserver sshd[1202]: Failed password for invalid user test from 203.0.113.5 port 51502 ssh2
+Jan 10 03:14:08 webserver sshd[1203]: Failed password for root from 203.0.113.5 port 51503 ssh2
+Jan 10 03:14:11 webserver sshd[1204]: Failed password for root from 203.0.113.5 port 51504 ssh2
+Jan 10 03:14:14 webserver sshd[1205]: Failed password for root from 203.0.113.5 port 51505 ssh2
+Jan 10 03:14:20 webserver sshd[1206]: Accepted password for root from 203.0.113.5 port 51506 ssh2
+Jan 10 09:05:11 webserver sshd[1301]: Accepted publickey for deploy from 198.51.100.20 port 44210 ssh2
+Jan 10 02:47:33 webserver sshd[1401]: Accepted password for backup_svc from 198.51.100.77 port 33112 ssh2
+Jan 11 14:20:01 webserver sshd[1501]: Failed password for invalid user oracle from 192.0.2.44 port 60011 ssh2
+Jan 11 14:20:44 webserver sshd[1502]: Accepted password for jsmith from 192.0.2.10 port 60022 ssh2
