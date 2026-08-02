@@ -1,58 +1,58 @@
 # LogSentinel
 
-A small CLI tool that parses Linux SSH authentication logs (`auth.log` / `secure`)
-and flags suspicious activity: brute-force attempts, successful logins that
-follow a string of failures, and logins during off-hours.
+Небольшая CLI-утилита для разбора логов SSH-аутентификации в Linux (`auth.log` / `secure`),
+которая находит подозрительную активность: brute-force атаки, успешные входы после серии
+неудачных попыток и входы в нетипичное время.
 
-This was built as a self-contained learning project to practice log parsing
-and detection logic similar in spirit to SIEM correlation rules — implemented
-from scratch in Python rather than relying on an existing SIEM.
+Проект сделан как самостоятельная учебная работа — для практики парсинга логов и логики
+детектирования, похожей по духу на правила корреляции в SIEM, но реализованной с нуля
+на Python, без использования готовой SIEM-системы.
 
-## Features
+## Возможности
 
-- Parses standard OpenSSH syslog lines (`Failed password`, `Accepted password` /
+- Разбор стандартных строк syslog от OpenSSH (`Failed password`, `Accepted password` /
   `Accepted publickey`, `Invalid user`)
-- Detection rules:
-  - **Brute force** — N or more failed logins from the same IP within a sliding time window
-  - **Success after failures** — a successful login from an IP that had several
-    recent failed attempts (classic "attacker eventually got in" pattern)
-  - **Off-hours login** — a successful login during a configurable off-hours window
-- Console report, plus optional JSON / CSV export
-- Unit tests (pytest) and a GitHub Actions CI workflow
+- Правила детектирования:
+  - **Brute force** — N и более неудачных попыток входа с одного IP в пределах скользящего временного окна
+  - **Успешный вход после неудачных попыток** — успешный вход с IP, у которого незадолго до этого
+    было несколько неудачных попыток (классический паттерн «атакующий в итоге зашёл»)
+  - **Вход в нетипичное время** — успешный вход в настраиваемом промежутке нерабочих часов
+- Отчёт в консоли, а также экспорт в JSON / CSV
+- Unit-тесты (pytest) и CI-workflow на GitHub Actions
 
-## Installation
+## Установка
 
 ```bash
-git clone https://github.com/<your-username>/logsentinel.git
-cd logsentinel
+git clone https://github.com/goodbaye/parser.git
+cd parser
 pip install -r requirements.txt
 ```
 
-No external dependencies are required to run the tool itself — `requirements.txt`
-only pulls in `pytest` for running the test suite.
+Для работы самой утилиты внешние зависимости не нужны — `requirements.txt`
+содержит только `pytest`, необходимый для запуска тестов.
 
-## Usage
+## Использование
 
 ```bash
 python3 -m logsentinel.cli sample_logs/auth.log --year 2026
 ```
 
-Export findings:
+Экспорт результатов:
 
 ```bash
 python3 -m logsentinel.cli sample_logs/auth.log --year 2026 --json findings.json --csv findings.csv
 ```
 
-Options:
+Опции:
 
-| Flag | Description |
+| Флаг | Описание |
 |---|---|
-| `--year YEAR` | Year to assume for log timestamps (syslog lines don't include a year). Defaults to the current year. |
-| `--json PATH` | Write findings as JSON to PATH |
-| `--csv PATH` | Write findings as CSV to PATH |
-| `--quiet` | Suppress the console report |
+| `--year YEAR` | Год, который нужно подставить к меткам времени в логах (в строках syslog год не указан). По умолчанию — текущий год. |
+| `--json PATH` | Записать результаты в формате JSON по указанному пути |
+| `--csv PATH` | Записать результаты в формате CSV по указанному пути |
+| `--quiet` | Не выводить отчёт в консоль |
 
-### Example output
+### Пример вывода
 
 ```
 Parsed 12 recognized log lines from sample_logs/auth.log
@@ -70,38 +70,38 @@ Findings: 4  (high=2, medium=2, low=0)
 ----------------------------------------------------------------------------------------------------
 ```
 
-## Running tests
+## Запуск тестов
 
 ```bash
 pip install -r requirements.txt
 pytest -v
 ```
 
-## Project structure
+## Структура проекта
 
 ```
-logsentinel/
+parser/
 ├── logsentinel/
 │   ├── __init__.py
-│   ├── parser.py      # log line parsing into LogEvent objects
-│   ├── detectors.py   # detection rules -> Finding objects
-│   ├── report.py      # console / JSON / CSV output
-│   └── cli.py         # argparse-based CLI entry point
+│   ├── parser.py      # разбор строк лога в объекты LogEvent
+│   ├── detectors.py   # правила детектирования -> объекты Finding
+│   ├── report.py       # вывод в консоль / JSON / CSV
+│   └── cli.py          # точка входа CLI на argparse
 ├── tests/
 │   ├── test_parser.py
 │   └── test_detectors.py
 ├── sample_logs/
-│   └── auth.log       # synthetic example log for demoing the tool
+│   └── auth.log        # синтетический пример лога для демонстрации
 └── .github/workflows/ci.yml
 ```
 
-## Possible extensions
+## Возможные доработки
 
-- Support for `journalctl` / `.evtx` (Windows Event Log) input
-- A rule for detecting distributed brute force (many IPs, same target account)
-- Config file for tuning thresholds instead of hardcoded defaults
-- Packaging as a pip-installable CLI (`pyproject.toml`, `logsentinel` entry point)
+- Поддержка входных данных из `journalctl` / `.evtx` (Windows Event Log)
+- Правило для детектирования распределённого brute-force (много IP, одна цель-аккаунт)
+- Конфигурационный файл для настройки порогов вместо жёстко заданных значений
+- Оформление в виде pip-устанавливаемого CLI (`pyproject.toml`, точка входа `logsentinel`)
 
-## License
+## Лицензия
 
-MIT — see [LICENSE](LICENSE).
+MIT — см. [LICENSE](LICENSE).
